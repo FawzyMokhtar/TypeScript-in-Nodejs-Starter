@@ -8,7 +8,7 @@
     "start": "node build/app.js",
     "dev": "nodemon src/app.ts",
     "build": "yarn run clear-build && yarn run build-src",
-    "clear-build": "rm build -r",
+    "clear-build": "rm build -r || true",
     "build-src": "tsc -p ."
   },
   "dependencies": {

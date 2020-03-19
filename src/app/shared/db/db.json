@@ -1,0 +1,108 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "Mobiles"
+    },
+    {
+      "id": 2,
+      "name": "Laptops"
+    },
+    {
+      "id": 3,
+      "name": "TVs"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "categoryId": 1,
+      "name": "Samsung Galaxy S5",
+      "price": 5000
+    },
+    {
+      "id": 2,
+      "categoryId": 1,
+      "name": "Samsung Galaxy S6",
+      "price": 4500
+    },
+    {
+      "id": 3,
+      "categoryId": 1,
+      "name": "Huawei P10 Lite",
+      "price": 5200
+    },
+    {
+      "id": 4,
+      "categoryId": 1,
+      "name": "Huawei P30",
+      "price": 3500
+    },
+    {
+      "id": 5,
+      "categoryId": 1,
+      "name": "Huawei P30 Lite",
+      "price": 7500
+    },
+    {
+      "id": 6,
+      "categoryId": 2,
+      "name": "Dell Inspiron 5520",
+      "price": 12000
+    },
+    {
+      "id": 7,
+      "categoryId": 2,
+      "name": "Dell Precision M6800",
+      "price": 15000
+    },
+    {
+      "id": 8,
+      "categoryId": 2,
+      "name": "Toshiba Pro-Book 9099",
+      "price": 7000
+    },
+    {
+      "id": 9,
+      "categoryId": 2,
+      "name": "Toshiba Pro-Book 2222",
+      "price": 3500
+    },
+    {
+      "id": 10,
+      "categoryId": 2,
+      "name": "HP Z-Book",
+      "price": 11000
+    },
+    {
+      "id": 11,
+      "categoryId": 3,
+      "name": "JAC 55 Inch Full HD LED Smart Android TV - 55ASS",
+      "price": 5200
+    },
+    {
+      "id": 12,
+      "categoryId": 3,
+      "name": "UnionAir 32 Inch HD LED TV - M-LD-32UN-PB816-EXD",
+      "price": 1995
+    },
+    {
+      "id": 13,
+      "categoryId": 3,
+      "name": "Toshiba 32 Inch HD LED TV - 32L2600EA",
+      "price": 3295
+    },
+    {
+      "id": 14,
+      "categoryId": 3,
+      "name": "Tornado 32 Inch LED HD TV - Black, 32EL7200E",
+      "price": 3150
+    },
+    {
+      "id": 15,
+      "categoryId": 3,
+      "name": "Samsung 32 Inch HD LED Standard TV - UA32K4000",
+      "price": 3550
+    }
+  ]
+}

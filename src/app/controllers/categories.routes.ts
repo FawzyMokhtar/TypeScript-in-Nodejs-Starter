@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { OK, InternalServerError } from '../shared';
+import { Ok, NotFound } from '../shared';
 import { CategoriesDataAccess } from '../categories';
 
 /**
@@ -14,16 +14,30 @@ export const CategoriesRouter = Router();
  */
 export const CategoriesRelativeRoute = 'categories';
 
+/* Search route. */
 CategoriesRouter.get('', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await CategoriesDataAccess.search(req.query.name, req.query.page, req.query.pageSize);
+
     if (result.data) {
-      OK(res, {
-        data: result.data,
-        meta: {
-          ...result.paginationInfo
-        }
-      });
+      Ok(res, { data: result.data, meta: { ...result.paginationInfo } });
+    } else if (result.error) {
+      next(result.error);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+/* Find by id route. */
+CategoriesRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await CategoriesDataAccess.findById(Number.parseInt(req.params.id));
+
+    if (result.isNotFound) {
+      NotFound(res);
+    } else if (result.data) {
+      Ok(res, { data: result.data });
     } else if (result.error) {
       next(result.error);
     }

@@ -4,18 +4,18 @@ import { AppHttpResponse, AppErrorCode } from '../models';
 /**
  * Returns a succeeded response with 200 status code.
  * @param response The http-response to be modified.
- * @param body The body that will be sent within the response' body.
+ * @param body An optional body that will be sent within the response' body.
  */
-export function OK(response: Response, body: AppHttpResponse): Response {
+export function Ok(response: Response, body?: AppHttpResponse): Response {
   return body ? response.send(body) : response.send();
 }
 
 /**
  * Returns a bad-request response with 200 status code.
  * @param response The http-response to be modified.
- * @param body The body that will be sent within the response' body.
+ * @param body An optional body that will be sent within the response' body.
  */
-export function BadRequest(response: Response, body: AppHttpResponse): Response {
+export function BadRequest(response: Response, body?: AppHttpResponse): Response {
   return body ? response.status(400).send(body) : response.status(400).send();
 }
 
@@ -56,6 +56,15 @@ export function Forbidden(response: Response): Response {
 }
 
 /**
+ * Returns a notfound response with 404 status code.
+ * @param response The http-response to be modified.
+ * @param body An optional body that will be sent within the response' body.
+ */
+export function NotFound(response: Response, body?: AppHttpResponse): Response {
+  return body ? response.status(404).send(body) : response.status(404).send();
+}
+
+/**
  * Returns an internal server error response with 500 status code.
  * @param response The http-response to be modified.
  * @param error The error or error-message to be sent within the response' body.
@@ -70,6 +79,5 @@ export function InternalServerError(response: Response, error: string | Error): 
       }
     ]
   };
-  console.log(error);
   return response.status(500).send(body);
 }

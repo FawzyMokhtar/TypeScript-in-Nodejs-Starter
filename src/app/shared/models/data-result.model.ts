@@ -31,6 +31,14 @@ export interface DataResult<DataType> {
   validationErrors?: ValidationErrors;
 
   /**
+   * Indicates whether the entity requested by the user is not exist.
+   *
+   * This property is mandatory in query-single-entity e.g. `findById` methods,
+   * if the entity not exists the `isNotFound` property should be set to `true`.
+   */
+  isNotFound?: boolean;
+
+  /**
    * Gets or sets an exception that may occurs during the processing of the operation.
    *
    * This property wont has value if the operation was succeeded.

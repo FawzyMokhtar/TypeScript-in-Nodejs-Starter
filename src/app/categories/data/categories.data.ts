@@ -32,4 +32,23 @@ export class CategoriesDataAccess {
 
     return result;
   }
+
+  /**
+   * Finds the category with the given id.
+   * @param id The id of the category.
+   */
+  public static async findById(id: number): Promise<DataResult<Category>> {
+    const result: DataResult<Category> = {};
+
+    try {
+      const db = await Database.load();
+
+      result.data = db.categories.find(category => category.id === id);
+      result.isNotFound = !result.data;
+    } catch (error) {
+      result.error = error;
+    }
+
+    return result;
+  }
 }

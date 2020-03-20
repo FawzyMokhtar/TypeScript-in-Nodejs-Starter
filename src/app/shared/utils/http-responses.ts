@@ -3,27 +3,27 @@ import { AppHttpResponse, AppErrorCode } from '../models';
 
 /**
  * Returns a succeeded response with 200 status code.
- * @param res The http-response to be modified.
+ * @param response The http-response to be modified.
  * @param body The body that will be sent within the response' body.
  */
-export function OK(res: Response, body: AppHttpResponse): Response {
-  return body ? res.send(body) : res.send();
+export function OK(response: Response, body: AppHttpResponse): Response {
+  return body ? response.send(body) : response.send();
 }
 
 /**
  * Returns a bad-request response with 200 status code.
- * @param res The http-response to be modified.
+ * @param response The http-response to be modified.
  * @param body The body that will be sent within the response' body.
  */
-export function BadRequest(res: Response, body: AppHttpResponse): Response {
-  return body ? res.status(400).send(body) : res.status(400).send();
+export function BadRequest(response: Response, body: AppHttpResponse): Response {
+  return body ? response.status(400).send(body) : response.status(400).send();
 }
 
 /**
  * Returns an un-authenticated response with 401 status code.
- * @param res The http-response to be modified.
+ * @param response The http-response to be modified.
  */
-export function UnAuthenticated(res: Response): Response {
+export function UnAuthenticated(response: Response): Response {
   const body: AppHttpResponse = {
     errors: [
       {
@@ -34,14 +34,14 @@ export function UnAuthenticated(res: Response): Response {
     ]
   };
 
-  return res.status(401).send(body);
+  return response.status(401).send(body);
 }
 
 /**
  * Returns a forbidden response with 403 status code.
- * @param res The http-response to be modified.
+ * @param response The http-response to be modified.
  */
-export function Forbidden(res: Response): Response {
+export function Forbidden(response: Response): Response {
   const body: AppHttpResponse = {
     errors: [
       {
@@ -52,24 +52,24 @@ export function Forbidden(res: Response): Response {
     ]
   };
 
-  return res.status(403).send(body);
+  return response.status(403).send(body);
 }
 
 /**
  * Returns an internal server error response with 500 status code.
- * @param res The http-response to be modified.
+ * @param response The http-response to be modified.
  * @param error The error or error-message to be sent within the response' body.
  */
-export function InternalServerError(res: Response, error: string | Error): Response {
+export function InternalServerError(response: Response, error: string | Error): Response {
   const body: AppHttpResponse = {
     errors: [
       {
         code: AppErrorCode.InternalServerError,
         title: 'Internal server error',
-        detail: typeof error === 'string' ? error : error?.message
+        detail: typeof error === 'string' ? error : error.message
       }
     ]
   };
-
-  return res.status(500).send(body);
+  console.log(error);
+  return response.status(500).send(body);
 }

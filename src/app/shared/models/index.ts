@@ -1,5 +1,4 @@
 export * from './database.model';
-export * from './validation-errors.model';
 export * from './data-result.model';
 export * from './pagination-info.model';
 export * from './app-error-codes.model';

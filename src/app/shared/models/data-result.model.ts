@@ -1,5 +1,5 @@
-import { ValidationErrors } from './validation-errors.model';
 import { PaginationInfo } from './pagination-info.model';
+import { AppHttpResponseError } from './app-http-response-error.model';
 
 /**
  * Represents a data-access layer operation result.
@@ -28,7 +28,7 @@ export interface DataResult<DataType> {
    *
    * This property wont has value if the operation was succeeded.
    */
-  validationErrors?: ValidationErrors;
+  validationErrors?: AppHttpResponseError[];
 
   /**
    * Indicates whether the entity requested by the user is not exist.

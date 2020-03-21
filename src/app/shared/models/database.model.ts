@@ -18,7 +18,7 @@ export class Database {
   /**
    * Creates a new instance of @see Database and loads the database data.
    */
-  public static async load(): Promise<Database> {
+  public static async connect(): Promise<Database> {
     return ((await import('../db/db.json')) as unknown) as Database;
   }
 }

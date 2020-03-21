@@ -15,6 +15,9 @@ export interface AppHttpResponseError {
    * Gets or sets the name of the source that causes this error.
    *
    * Usually it's the name of the property that causes the error.
+   *
+   * The property maybe a nested property,
+   * in this case use e.g. if we are validating a `Person` object use `address.postalCode` instead of `postalCode`.
    */
   source?: string;
 

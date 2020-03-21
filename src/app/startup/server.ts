@@ -5,7 +5,7 @@ import cors from 'cors';
 import { errorHandler, Logger } from '../shared';
 
 /** All of application routes as pairs of (Router &  Relative Route) */
-import { CategoriesRouter, CategoriesRelativeRoute } from '../controllers';
+import { categoriesRouter, categoriesRelativeRoute } from '../controllers';
 
 /**
  * Adds a set of middleware only if the app runs on the production machine.
@@ -60,7 +60,7 @@ function registerRoutes(app: Application): void {
   const baseRoute = '/api/';
 
   /** Start register routes. */
-  app.use(baseRoute + CategoriesRelativeRoute, CategoriesRouter);
+  app.use(baseRoute + categoriesRelativeRoute, categoriesRouter);
 }
 
 /**

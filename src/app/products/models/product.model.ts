@@ -20,6 +20,11 @@ export interface Product {
   price: number;
 
   /**
+   * Gets or sets the id of the category that the product belongs to.
+   */
+  categoryId: number;
+
+  /**
    * Gets or sets the category that the product belongs to.
    */
   category: Category;

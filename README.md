@@ -2,7 +2,7 @@
 
 A starter kit for <b>[Node.js](https://nodejs.org/)</b> project written with <b>[TypeScript](https://www.typescriptlang.org/)</b>.
 
-This project is scalable and maintainable as your application's business grows.
+This project is well organized, scalable and maintainable boilerplate as your application's business grows.
 
 ## Prerequisites
 
@@ -15,17 +15,17 @@ It's is recommended before start to have a basic knowledge about the following
 
 ## Table of contents
 
-- [Getting Started](##getting-started)
-  - [Setup project dependencies](###setup-project-dependencies).
-  - [Run project](######to-run-this-project-in-development-environment-run-the-command).
-- [Problem definition](##problem-definition).
-- [How to solve the problem](##how-to-solve-the-problem).
-- [Project structure](##project-structure).
-- [Database](##database).
-- [API](##api)
-  - [App specific error codes](###app-specific-error-codes).
-  - [API examples](###api-examples).
-- [Static code analysis](##static-code-analysis).
+- [Getting Started](#getting-started)
+  - [Setup project dependencies](#setup-project-dependencies).
+  - [Run project](#to-run-this-project-in-development-environment-run-the-command).
+- [Problem definition](#problem-definition).
+- [How to solve the problem](#how-to-solve-the-problem).
+- [Project structure](#project-structure).
+- [Database](#database).
+- [API](#api)
+  - [App specific error codes](#app-specific-error-codes).
+  - [API examples](#api-examples).
+- [Static code analysis](#static-code-analysis).
 
 ## Getting Started
 

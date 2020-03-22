@@ -15,17 +15,27 @@ It's is recommended before start to have a basic knowledge about the following
 
 ## Table of contents
 
+- [Problem definition](#problem-definition).
+- [How to solve the problem](#how-to-solve-the-problem).
 - [Getting Started](#getting-started)
   - [Setup project dependencies](#setup-project-dependencies).
   - [Run project](#to-run-this-project-in-development-environment-run-the-command).
-- [Problem definition](#problem-definition).
-- [How to solve the problem](#how-to-solve-the-problem).
 - [Project structure](#project-structure).
 - [Database](#database).
 - [API](#api)
   - [App specific error codes](#app-specific-error-codes).
   - [API examples](#api-examples).
 - [Static code analysis](#static-code-analysis).
+
+## Problem definition
+
+As we know <b>JavaScript</b> doesn't enforce type checking by itself, this may not be a problem when developing small <b>Node.js</b> apps, but it will be a <b><i>BIG problem</i></b> when building a multi-module or scaled apps.
+
+## How to solve the problem
+
+Since <b>TypeScript</b> is a super set of <b>JavaScript</b>, we can have <b>Node.js</b> apps to be written using <b>TyeScript</b>.
+
+<b>TypeScript</b> is transpiled using <b>TypeScript Compiler</b> - also known as <b>tsc</b> - which can be adjusted to output the desired version of <b>ECMAScript</b>.
 
 ## Getting Started
 
@@ -70,16 +80,6 @@ yarn run build
 ```bash
 yarn run start
 ```
-
-## Problem definition
-
-As we know <b>JavaScript</b> doesn't enforce type checking by itself, this may not be a problem when developing small <b>Node.js</b> apps, but it will be a <b><i>BIG problem</i></b> when building a multi-module or scaled apps.
-
-## How to solve the problem
-
-Since <b>TypeScript</b> is a super set of <b>JavaScript</b>, we can have <b>Node.js</b> apps to be written using <b>TyeScript</b>.
-
-<b>TypeScript</b> is transpiled using <b>TypeScript Compiler</b> - also known as <b>tsc</b> - which can be adjusted to output the desired version of <b>ECMAScript</b>.
 
 ## Project structure
 

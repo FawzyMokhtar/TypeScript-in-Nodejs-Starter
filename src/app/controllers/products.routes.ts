@@ -1,28 +1,28 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
-import { Ok, NotFound, validationErrorFormatter, BadRequest } from '../shared';
+import { Ok, NotFound, validationErrorFormatter, BadRequest, getQueryParamAsIntArray } from '../shared';
 import {
-  CategoriesDataAccess,
-  createCategoryValidator,
-  CreateCategoryInput,
-  updateCategoryValidator,
-  UpdateCategoryInput
-} from '../categories';
+  ProductsDataAccess,
+  createProductValidator,
+  CreateProductInput,
+  updateProductValidator,
+  UpdateProductInput
+} from '../products';
 
 /**
- * The Categories-Module router that holds all module routes.
+ * The Products-Module router that holds all module routes.
  */
-export const categoriesRouter = Router();
+export const productsRouter = Router();
 
 /**
- * The relative route for the Categories-Module.
+ * The relative route for the Products-Module.
  *
  * No leading or trailing slashes required.
  */
-export const categoriesRelativeRoute = 'categories';
+export const productsRelativeRoute = 'products';
 
-/* Create new category route. */
-categoriesRouter.post('', createCategoryValidator, async (req: Request, res: Response, next: NextFunction) => {
+/* Create new product route. */
+productsRouter.post('', createProductValidator, async (req: Request, res: Response, next: NextFunction) => {
   try {
     /** The validation errors that may result from validating request [body', 'cookies', 'headers', 'params' or 'query' ] */
     const validationErrors = validationResult(req)
@@ -33,8 +33,8 @@ categoriesRouter.post('', createCategoryValidator, async (req: Request, res: Res
       return BadRequest(res, { errors: validationErrors });
     }
 
-    const data: CreateCategoryInput = req.body;
-    const result = await CategoriesDataAccess.create(data);
+    const data: CreateProductInput = req.body;
+    const result = await ProductsDataAccess.create(data);
 
     if (result.validationErrors && result.validationErrors.length) {
       BadRequest(res, { errors: result.validationErrors });
@@ -48,11 +48,12 @@ categoriesRouter.post('', createCategoryValidator, async (req: Request, res: Res
   }
 });
 
-/* Search categories route. */
-categoriesRouter.get('', async (req: Request, res: Response, next: NextFunction) => {
+/* Search products route. */
+productsRouter.get('', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await CategoriesDataAccess.search(
+    const result = await ProductsDataAccess.search(
       req.query.name,
+      getQueryParamAsIntArray(req, 'categories'),
       parseInt(req.query.page),
       parseInt(req.query.pageSize)
     );
@@ -67,10 +68,10 @@ categoriesRouter.get('', async (req: Request, res: Response, next: NextFunction)
   }
 });
 
-/* Find category by id route. */
-categoriesRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
+/* Find product by id route. */
+productsRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await CategoriesDataAccess.findById(Number.parseInt(req.params.id));
+    const result = await ProductsDataAccess.findById(Number.parseInt(req.params.id));
 
     if (result.isNotFound) {
       NotFound(res);
@@ -84,8 +85,8 @@ categoriesRouter.get('/:id', async (req: Request, res: Response, next: NextFunct
   }
 });
 
-/* Update an existing category route. */
-categoriesRouter.put('', updateCategoryValidator, async (req: Request, res: Response, next: NextFunction) => {
+/* Update an existing product route. */
+productsRouter.put('', updateProductValidator, async (req: Request, res: Response, next: NextFunction) => {
   try {
     /** The validation errors that may result from validating request [body', 'cookies', 'headers', 'params' or 'query' ] */
     const validationErrors = validationResult(req)
@@ -96,8 +97,8 @@ categoriesRouter.put('', updateCategoryValidator, async (req: Request, res: Resp
       return BadRequest(res, { errors: validationErrors });
     }
 
-    const data: UpdateCategoryInput = req.body;
-    const result = await CategoriesDataAccess.update(data);
+    const data: UpdateProductInput = req.body;
+    const result = await ProductsDataAccess.update(data);
 
     if (result.isNotFound) {
       NotFound(res);
@@ -114,9 +115,9 @@ categoriesRouter.put('', updateCategoryValidator, async (req: Request, res: Resp
 });
 
 /* Delete by id route. */
-categoriesRouter.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
+productsRouter.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await CategoriesDataAccess.delete(Number.parseInt(req.params.id));
+    const result = await ProductsDataAccess.delete(Number.parseInt(req.params.id));
 
     if (result.isNotFound) {
       NotFound(res);

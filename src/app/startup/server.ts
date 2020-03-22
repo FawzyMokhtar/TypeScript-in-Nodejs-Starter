@@ -5,7 +5,7 @@ import cors from 'cors';
 import { errorHandler, Logger } from '../shared';
 
 /** All of application routes as pairs of (Router &  Relative Route) */
-import { categoriesRouter, categoriesRelativeRoute } from '../controllers';
+import { categoriesRouter, categoriesRelativeRoute, productsRouter, productsRelativeRoute } from '../controllers';
 
 /**
  * Adds a set of middleware only if the app runs on the production machine.
@@ -61,6 +61,7 @@ function registerRoutes(app: Application): void {
 
   /** Start register routes. */
   app.use(baseRoute + categoriesRelativeRoute, categoriesRouter);
+  app.use(baseRoute + productsRelativeRoute, productsRouter);
 }
 
 /**

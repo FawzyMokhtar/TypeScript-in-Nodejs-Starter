@@ -49,7 +49,7 @@ export class CategoriesDataAccess {
 
   /**
    * Searches the categories and find the set of categories matching the provided query params.
-   * @param name The name or part of the name of the category.
+   * @param name The name or part of the name of the category, The search is case-insensitive.
    * @param page The number of current pagination page.
    * @param pageSize The maximum allowed number of categories per-page.
    */
@@ -62,12 +62,15 @@ export class CategoriesDataAccess {
       page = page || 1;
       const { skip, limit } = paginate(page, pageSize);
 
+      /** The query that will be used to filter categories. */
+      const query = (category: Category): boolean => !name || category.name.toLowerCase().includes(name.toLowerCase());
+
       result.data = db.categories
-        .filter(category => category.name.includes(name) || !name)
+        .filter(query)
         .slice(skip)
         .slice(0, limit);
 
-      result.paginationInfo = genPaginationInfo(page, pageSize, db.categories.length, result.data.length);
+      result.paginationInfo = genPaginationInfo(page, pageSize, db.categories.filter(query).length, result.data.length);
     } catch (error) {
       result.error = error;
     }

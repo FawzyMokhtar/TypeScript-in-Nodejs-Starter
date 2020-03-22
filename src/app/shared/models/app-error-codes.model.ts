@@ -24,5 +24,11 @@ export enum AppErrorCode {
   ValueExists = 7,
 
   /** The entity can't be deleted due to its existing relations with other entities. */
-  CantBeDeleted = 8
+  CantBeDeleted = 8,
+
+  /**
+   * The related entity isn't found,
+   * @summary e.g. you are trying to create a new product in a category which is not exists in the database.
+   */
+  RelatedEntityNotFound = 9
 }

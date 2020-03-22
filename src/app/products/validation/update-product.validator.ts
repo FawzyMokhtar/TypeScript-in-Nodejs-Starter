@@ -4,7 +4,7 @@ import { AppErrorCode } from '../../shared';
 /**
  * The update category data-model validator.
  */
-export const updateCategoryValidator = [
+export const updateProductValidator = [
   /* id field. */
   check('id')
     .exists({ checkNull: true })
@@ -43,5 +43,37 @@ export const updateCategoryValidator = [
       code: AppErrorCode.InvalidLength,
       title: 'Invalid field length',
       detail: 'Name must be from (2 - 50) characters length'
+    }),
+
+  /* price field. */
+  check('price')
+    .exists({ checkNull: true })
+    .withMessage({
+      code: AppErrorCode.IsRequired,
+      title: 'Field is required',
+      detail: 'Price is required'
+    })
+
+    .isFloat({ gt: 0 })
+    .withMessage({
+      code: AppErrorCode.InvalidType,
+      title: 'Invalid field type',
+      detail: 'Price must be a positive (Float, Decimal) number'
+    }),
+
+  /* categoryId field. */
+  check('categoryId')
+    .exists({ checkNull: true })
+    .withMessage({
+      code: AppErrorCode.IsRequired,
+      title: 'Field is required',
+      detail: 'Category id is required'
+    })
+
+    .isInt({ gt: 0 })
+    .withMessage({
+      code: AppErrorCode.InvalidType,
+      title: 'Invalid field type',
+      detail: 'Category id must be an (Integer)'
     })
 ];

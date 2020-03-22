@@ -5,6 +5,7 @@ import { AppErrorCode } from '../../shared';
  * The create category data-model validator.
  */
 export const createCategoryValidator = [
+  /* name field. */
   check('name')
     .exists({ checkNull: true })
     .withMessage({

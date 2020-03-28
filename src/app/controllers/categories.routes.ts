@@ -36,12 +36,12 @@ categoriesRouter.post('', createCategoryValidator, async (req: Request, res: Res
     const data: CreateCategoryInput = req.body;
     const result = await CategoriesDataAccess.create(data);
 
-    if (result.validationErrors && result.validationErrors.length) {
+    if (result.error) {
+      next(result.error);
+    } else if (result.validationErrors && result.validationErrors.length) {
       BadRequest(res, { errors: result.validationErrors });
     } else if (result.data) {
       Ok(res, { data: result.data });
-    } else if (result.error) {
-      next(result.error);
     }
   } catch (error) {
     next(error);
@@ -57,10 +57,10 @@ categoriesRouter.get('', async (req: Request, res: Response, next: NextFunction)
       parseInt(req.query.pageSize)
     );
 
-    if (result.data) {
-      Ok(res, { data: result.data, meta: { ...result.paginationInfo } });
-    } else if (result.error) {
+    if (result.error) {
       next(result.error);
+    } else if (result.data) {
+      Ok(res, { data: result.data, meta: { ...result.paginationInfo } });
     }
   } catch (error) {
     next(error);
@@ -72,12 +72,12 @@ categoriesRouter.get('/:id', async (req: Request, res: Response, next: NextFunct
   try {
     const result = await CategoriesDataAccess.findById(Number.parseInt(req.params.id));
 
-    if (result.isNotFound) {
+    if (result.error) {
+      next(result.error);
+    } else if (result.isNotFound) {
       NotFound(res);
     } else if (result.data) {
       Ok(res, { data: result.data });
-    } else if (result.error) {
-      next(result.error);
     }
   } catch (error) {
     next(error);
@@ -99,14 +99,14 @@ categoriesRouter.put('', updateCategoryValidator, async (req: Request, res: Resp
     const data: UpdateCategoryInput = req.body;
     const result = await CategoriesDataAccess.update(data);
 
-    if (result.isNotFound) {
+    if (result.error) {
+      next(result.error);
+    } else if (result.isNotFound) {
       NotFound(res);
     } else if (result.validationErrors && result.validationErrors.length) {
       BadRequest(res, { errors: result.validationErrors });
     } else if (result.data) {
       Ok(res, { data: result.data });
-    } else if (result.error) {
-      next(result.error);
     }
   } catch (error) {
     next(error);
@@ -118,14 +118,14 @@ categoriesRouter.delete('/:id', async (req: Request, res: Response, next: NextFu
   try {
     const result = await CategoriesDataAccess.delete(Number.parseInt(req.params.id));
 
-    if (result.isNotFound) {
+    if (result.error) {
+      next(result.error);
+    } else if (result.isNotFound) {
       NotFound(res);
     } else if (result.validationErrors && result.validationErrors.length) {
       BadRequest(res, { errors: result.validationErrors });
     } else if (result.data) {
       Ok(res, { data: result.data });
-    } else if (result.error) {
-      next(result.error);
     }
   } catch (error) {
     next(error);

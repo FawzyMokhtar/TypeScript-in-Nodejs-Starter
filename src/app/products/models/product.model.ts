@@ -1,7 +1,9 @@
-import { Category } from '../../categories/models';
+import { CategoryDTO } from '../../categories/models';
 
 /**
- * Represents the products.
+ * Represents a data transfer object(DTO) for the product.
+ *
+ * @see for more information about DTO https://www.codeproject.com/Articles/1050468/Data-Transfer-Object-Design-Pattern-in-Csharp
  */
 export interface Product {
   /**
@@ -27,5 +29,5 @@ export interface Product {
   /**
    * Gets or sets the category that the product belongs to.
    */
-  category: Category;
+  category: CategoryDTO;
 }

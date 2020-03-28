@@ -14,7 +14,7 @@ export interface DataResult<DataType> {
    *
    * This property will has a value only if the operation was succeeded.
    */
-  data?: DataType;
+  data?: DataType | null;
 
   /**
    * Gets or sets the pagination info if the operation was a succeeded set query operation.

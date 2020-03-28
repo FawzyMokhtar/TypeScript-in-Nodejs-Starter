@@ -36,12 +36,12 @@ productsRouter.post('', createProductValidator, async (req: Request, res: Respon
     const data: CreateProductInput = req.body;
     const result = await ProductsDataAccess.create(data);
 
-    if (result.validationErrors && result.validationErrors.length) {
+    if (result.error) {
+      next(result.error);
+    } else if (result.validationErrors && result.validationErrors.length) {
       BadRequest(res, { errors: result.validationErrors });
     } else if (result.data) {
       Ok(res, { data: result.data });
-    } else if (result.error) {
-      next(result.error);
     }
   } catch (error) {
     next(error);
@@ -58,10 +58,10 @@ productsRouter.get('', async (req: Request, res: Response, next: NextFunction) =
       parseInt(req.query.pageSize)
     );
 
-    if (result.data) {
-      Ok(res, { data: result.data, meta: { ...result.paginationInfo } });
-    } else if (result.error) {
+    if (result.error) {
       next(result.error);
+    } else if (result.data) {
+      Ok(res, { data: result.data, meta: { ...result.paginationInfo } });
     }
   } catch (error) {
     next(error);
@@ -73,12 +73,12 @@ productsRouter.get('/:id', async (req: Request, res: Response, next: NextFunctio
   try {
     const result = await ProductsDataAccess.findById(Number.parseInt(req.params.id));
 
-    if (result.isNotFound) {
+    if (result.error) {
+      next(result.error);
+    } else if (result.isNotFound) {
       NotFound(res);
     } else if (result.data) {
       Ok(res, { data: result.data });
-    } else if (result.error) {
-      next(result.error);
     }
   } catch (error) {
     next(error);
@@ -100,14 +100,14 @@ productsRouter.put('', updateProductValidator, async (req: Request, res: Respons
     const data: UpdateProductInput = req.body;
     const result = await ProductsDataAccess.update(data);
 
-    if (result.isNotFound) {
+    if (result.error) {
+      next(result.error);
+    } else if (result.isNotFound) {
       NotFound(res);
     } else if (result.validationErrors && result.validationErrors.length) {
       BadRequest(res, { errors: result.validationErrors });
     } else if (result.data) {
       Ok(res, { data: result.data });
-    } else if (result.error) {
-      next(result.error);
     }
   } catch (error) {
     next(error);
@@ -119,14 +119,14 @@ productsRouter.delete('/:id', async (req: Request, res: Response, next: NextFunc
   try {
     const result = await ProductsDataAccess.delete(Number.parseInt(req.params.id));
 
-    if (result.isNotFound) {
+    if (result.error) {
+      next(result.error);
+    } else if (result.isNotFound) {
       NotFound(res);
     } else if (result.validationErrors && result.validationErrors.length) {
       BadRequest(res, { errors: result.validationErrors });
     } else if (result.data) {
       Ok(res, { data: result.data });
-    } else if (result.error) {
-      next(result.error);
     }
   } catch (error) {
     next(error);

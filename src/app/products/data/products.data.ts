@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { Op } from 'sequelize';
 import { Database, DataResult, paginate, genPaginationInfo, AppErrorCode } from '../../shared';
 import { Product, CreateProductInput, UpdateProductInput } from '../models';
 
@@ -14,12 +15,10 @@ export class ProductsDataAccess {
     const result: DataResult<Product> = {};
 
     try {
-      const db = await Database.connect();
-
       //#region validate data-model
 
       /** Check if name is already exists in database. */
-      if (db.products.some(item => item.name === data.name)) {
+      if (!!(await Database.Products.count({ where: { name: data.name } }))) {
         result.validationErrors = [
           {
             code: AppErrorCode.ValueExists,
@@ -32,7 +31,7 @@ export class ProductsDataAccess {
       }
 
       /** The category that the new product will belong to. */
-      const category = db.categories.find(item => item.id === data.categoryId);
+      const category = await Database.Categories.findByPk(data.categoryId);
 
       /* Make sure that category is exists in the database. */
       if (!category) {
@@ -49,13 +48,10 @@ export class ProductsDataAccess {
 
       //#endregion
 
-      /** The id that should be assigned to the new product. */
-      const id = (_.max(db.products.map(product => product.id)) || 0) + 1;
+      const product = await Database.Products.create({ name: data.name, price: data.price, categoryId: category.id });
 
-      result.data = { id, name: data.name, price: data.price, categoryId: category.id, category };
-
-      /* Add the newly created product to the database. */
-      db.products.push(result.data);
+      /* Reload the product to get the category that the product belongs to. */
+      result.data = (await this.findById(product.id)).data;
     } catch (error) {
       result.error = error;
     }
@@ -80,27 +76,28 @@ export class ProductsDataAccess {
     const result: DataResult<Product[]> = {};
 
     try {
-      const db = await Database.connect();
-
       page = page || 1;
-      const { skip, limit } = paginate(page, pageSize);
+      const { offset, limit } = paginate(page, pageSize);
 
-      /** The query that will be used to filter products. */
-      const query = (product: Product): boolean =>
-        (!name || product.name.toLowerCase().includes(name.toLowerCase())) &&
-        (!categories || !categories.length || categories.includes(product.categoryId));
+      const products = await Database.Products.findAndCountAll({
+        where: {
+          name: {
+            [Op.iLike]: `%${name}%`
+          },
+          categoryId: {
+            [Op.in]: categories
+          }
+        },
+        include: [{ model: Database.Categories, required: true }],
+        offset,
+        limit,
+        raw: true,
+        nest: true
+      });
 
-      result.data = db.products
-        .filter(query)
-        .slice(skip)
-        .slice(0, limit)
-        .map(product => {
-          /* Bind each product's category. */
-          product.category = db.categories.filter(category => category.id === product.categoryId)[0];
-          return product;
-        });
+      result.data = products.rows as Product[];
 
-      result.paginationInfo = genPaginationInfo(page, pageSize, db.products.filter(query).length, result.data.length);
+      result.paginationInfo = genPaginationInfo(page, pageSize, products.count, products.rows.length);
     } catch (error) {
       result.error = error;
     }
@@ -116,17 +113,12 @@ export class ProductsDataAccess {
     const result: DataResult<Product> = {};
 
     try {
-      const db = await Database.connect();
-
-      result.data = db.products.find(product => product.id === id);
+      result.data = (await Database.Products.findByPk(id, {
+        include: [{ model: Database.Categories, required: true }],
+        raw: true,
+        nest: true
+      })) as Product;
       result.isNotFound = !result.data;
-
-      /* Bind product's category if the product was found. */
-      if (result.data) {
-        result.data.category = db.categories.filter(
-          category => result.data && category.id === result.data.categoryId
-        )[0];
-      }
     } catch (error) {
       result.error = error;
     }
@@ -142,10 +134,8 @@ export class ProductsDataAccess {
     const result: DataResult<Product> = {};
 
     try {
-      const db = await Database.connect();
-
       /** The product to be updated. */
-      const product = db.products.find(product => product.id === data.id);
+      const product = await Database.Products.findByPk(data.id);
 
       /* Make sure that product is exists in the database. */
       if (!product) {
@@ -156,7 +146,12 @@ export class ProductsDataAccess {
       //#region validate data-model
 
       /** Check if name is already exists for another product in database. */
-      if (db.products.some(item => item.id !== product.id && item.name === data.name)) {
+      const nameExists = !!(await Database.Products.count({
+        where: {
+          [Op.and]: [{ name: data.name }, { id: { [Op.ne]: product.id } }]
+        }
+      }));
+      if (nameExists) {
         result.validationErrors = [
           {
             code: AppErrorCode.ValueExists,
@@ -169,7 +164,7 @@ export class ProductsDataAccess {
       }
 
       /** The new category that the product will belong to. */
-      const category = db.categories.find(item => item.id === data.categoryId);
+      const category = await Database.Categories.findByPk(data.categoryId);
 
       /* Make sure that category is exists in the database. */
       if (!category) {
@@ -187,12 +182,10 @@ export class ProductsDataAccess {
       //#endregion
 
       /* Update product data. */
-      product.name = data.name;
-      product.price = data.price;
-      product.categoryId = category.id;
-      product.category = category;
+      await product.update({ name: data.name, price: data.price, categoryId: category.id });
 
-      result.data = product;
+      /* Reload the product to get the category that the product belongs to. */
+      result.data = (await this.findById(product.id)).data;
     } catch (error) {
       result.error = error;
     }
@@ -208,10 +201,10 @@ export class ProductsDataAccess {
     const result: DataResult<Product> = {};
 
     try {
-      const db = await Database.connect();
-
       /** The product to be deleted. */
-      const product = db.products.find(product => product.id === id);
+      const product = await Database.Products.findByPk(id, {
+        include: [{ model: Database.Categories, required: true }]
+      });
 
       /* Make sure that product is exists in the database. */
       if (!product) {
@@ -220,9 +213,9 @@ export class ProductsDataAccess {
       }
 
       /* Delete product from database. */
-      _.remove(db.products, item => item.id === product.id);
+      await product.destroy();
 
-      result.data = product;
+      result.data = product.get({ plain: true }) as Product;
     } catch (error) {
       result.error = error;
     }

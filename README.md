@@ -21,7 +21,7 @@ It's is recommended before start to have a basic knowledge about the following
   - [Setup project dependencies](#setup-project-dependencies).
   - [Run project](#to-run-this-project-in-development-environment-run-the-command).
 - [Project structure](#project-structure).
-- [Database](#database).
+- [Database](#database) (In-memory Database).
 - [API](#api)
   - [App specific error codes](#app-specific-error-codes).
   - [API examples](#api-examples).

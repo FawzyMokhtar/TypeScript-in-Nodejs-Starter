@@ -232,6 +232,11 @@ export class Database {
 }
 ```
 
+You can find the database scripts under the <span style="color: blue">./resources</span> folder
+
+- typescript_in_nodejs_starter_db.sql (a full database schema & data script).
+- typescript_in_nodejs_starter_db_data.sql (a data only script).
+
 ### API
 
 Since we follow the [Json API](https://jsonapi.org/) standards, our web api should always return a response with this structure

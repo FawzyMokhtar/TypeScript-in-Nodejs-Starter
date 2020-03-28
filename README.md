@@ -146,6 +146,11 @@ Each Product will have the properties
 
 ### Database
 
+Until now this boilerplate supports two types of databases:
+
+- In-memory Database (current branch).
+- PostgreSQL Database (branch [postgresql-integration](https://github.com/FawzyMokhtar/TypeScript-in-Nodejs-Starter/tree/postgresql-integration)).
+
 We are using a <span style="color: blue">json</span> file as virtual database.
 
 The database file could be found in the location <span style="color: blue">./src/app/shared/db/db.json</span> .

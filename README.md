@@ -9,6 +9,8 @@ This project is well organized, scalable and maintainable boilerplate as your ap
 It's is recommended before start to have a basic knowledge about the following
 
 - [TypeScript](https://www.typescriptlang.org/).
+- [PostgreSQL](https://www.postgresql.org/).
+- [Sequelize ORM](https://sequelize.org/).
 - [Express](https://www.npmjs.com/package/express).
 - [Express Validator](https://www.npmjs.com/package/express-validator).
 - [Json API](https://jsonapi.org/) with [examples](https://jsonapi.org/examples/) (optional).
@@ -21,7 +23,7 @@ It's is recommended before start to have a basic knowledge about the following
   - [Setup project dependencies](#setup-project-dependencies).
   - [Run project](#to-run-this-project-in-development-environment-run-the-command).
 - [Project structure](#project-structure).
-- [Database](#database).
+- [Database](#database) (PostgreSQL Integration).
 - [API](#api)
   - [App specific error codes](#app-specific-error-codes).
   - [API examples](#api-examples).
@@ -119,7 +121,8 @@ Each Product will have the properties
     │   └── validation
     ├── shared
     │   ├── db
-    │   │   └── db.json
+    │   │   ├── models
+    │   │   ├── helpers
     │   ├── middleware
     │   ├── models
     │   └── utils
@@ -133,7 +136,7 @@ Each Product will have the properties
 
 - Each folder on the <span style="color: blue">app</span> folder represents an application <span style="color: blue">module</span>.
 
-- <span style="color: blue">shared module</span> contains <span style="color: blue">utilities</span> and <span style="color: blue">shared models</span> which will be used by other application modules.
+- <span style="color: blue">shared module</span> contains <span style="color: blue">database definition</span>, <span style="color: blue">utilities</span> and <span style="color: blue">shared models</span> which will be used by other application modules.
 
 - <span style="color: blue">controllers module</span> is where all application modules' routes are being defined.
 
@@ -146,36 +149,85 @@ Each Product will have the properties
 
 ### Database
 
-We are using a <span style="color: blue">json</span> file as virtual database.
+Until now this boilerplate supports two types of databases:
 
-The database file could be found in the location <span style="color: blue">./src/app/shared/db/db.json</span> .
+- In-memory Database (branch [master](https://github.com/FawzyMokhtar/TypeScript-in-Nodejs-Starter/tree/master)).
+- PostgreSQL Database (current branch).
 
-<b>Important note </b><span style="background-color: #2697EC;color: #ffff; font-size: 1.25rem;">↴</span>
+We are using a [postgresql](https://www.postgresql.org/) database along with [sequelize ORM](https://sequelize.org/).
 
-When we load the <span style="color: blue">db.json</span> file we create an <b style="color: blue">in-memory</b> database which means are changes such as (create, update & delete) category or product will be available until the application is restarted.
+The database schema and definition could be found in the location <span style="color: blue">./src/app/shared/db</span> .
 
-We use a class called <b>Database</b> defined in the file <span style="color: blue">./src/app/shared/models/database.model.ts</span> to load and query the data from the <span style="color: blue">db.json</span> file.
+Each database table must be defined as a [sequelize](https://sequelize.org/) model under the folder <span style="color: blue">./src/app/shared/db/models</span> .
+
+In the file <span style="color: blue">./src/app/shared/db/models/index.ts</span> after exporting all defined models we should setup all models relations.
+
+We use a class called <b>Database</b> defined in the file <span style="color: blue">./src/app/shared/db/helpers/database.model.ts</span> as central point to deal with all database models.
 
 ```typescript
+import { Sequelize } from 'sequelize';
+import { Category, Product } from '../models';
+
+/* 
+   Connect to database.
+   NOTE: i'm connecting here to the database `typescript_in_nodejs_starter_db` on my `localhost` with username `postgres` and password 'fawzy'.
+   You can change this data and use your data instead.
+ */
+
 /**
- * Represents a virtual database with two tables `categories` and `products`.
+ * A singleton instance of sequelize that will be used across the application.
+ *
+ * @summary It's important to not use any other instances of sequelize other than this instance unless you have more than one database.
+ */
+const sequelize = new Sequelize('typescript_in_nodejs_starter_db', 'postgres', 'fawzy', {
+  host: 'localhost',
+  dialect: 'postgres',
+  logging: false /* Stop logging sql queries unless your are tracing some problems. */
+});
+
+/**
+ * The Database helper that includes all functionalities related to the database and all of it's models.
+ * @summary All of this class members are static.
+ * @summary All database models should be registered in this class.
+ * @summary All database models should be accessed only through this class as central point of database functionality.
  */
 export class Database {
   /**
-   * Gets or sets the set of categories available in the database.
+   * A singleton instance of sequelize that will be used across the application.
+   *
+   * @summary It's important to not use any other instances of sequelize other than this instance unless you have more than one database.
    */
-  public categories: Category[] = [];
+  public static readonly sequelize: Sequelize = sequelize;
 
   /**
-   * Gets or sets the set of products available in the database.
+   * Tests the connection to the database using the provided credentials.
    */
-  public products: Product[] = [];
+  public static testDatabaseConnection(): Promise<void> {
+    return sequelize.authenticate();
+  }
 
   /**
-   * Creates a new instance of @see Database and loads the database data.
+   * Sync all defined models to the DB.
+   * @param force If force is true, each DAO will do DROP TABLE IF EXISTS ..., before it tries to create its own table
    */
-  public static async connect(): Promise<Database> {
-    return ((await import('../db/db.json')) as unknown) as Database;
+  public static syncDatabase(force?: boolean): Promise<never> {
+    return sequelize.sync({ force: force });
+  }
+
+  /**
+   * The Category model that maps the `categories table` in the database.
+   * The model name will be `categories` also.
+   */
+  public static get Categories(): typeof Category {
+    return Category;
+  }
+
+  /**
+   * The Product model that maps the `products table` in the database.
+   * The model name will be `products` also.
+   */
+  public static get Products(): typeof Product {
+    return Product;
   }
 }
 ```

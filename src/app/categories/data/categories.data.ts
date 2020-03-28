@@ -60,14 +60,14 @@ export class CategoriesDataAccess {
       const db = await Database.connect();
 
       page = page || 1;
-      const { skip, limit } = paginate(page, pageSize);
+      const { offset, limit } = paginate(page, pageSize);
 
       /** The query that will be used to filter categories. */
       const query = (category: Category): boolean => !name || category.name.toLowerCase().includes(name.toLowerCase());
 
       result.data = db.categories
         .filter(query)
-        .slice(skip)
+        .slice(offset)
         .slice(0, limit);
 
       result.paginationInfo = genPaginationInfo(page, pageSize, db.categories.filter(query).length, result.data.length);

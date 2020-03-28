@@ -83,7 +83,7 @@ export class ProductsDataAccess {
       const db = await Database.connect();
 
       page = page || 1;
-      const { skip, limit } = paginate(page, pageSize);
+      const { offset, limit } = paginate(page, pageSize);
 
       /** The query that will be used to filter products. */
       const query = (product: Product): boolean =>
@@ -92,7 +92,7 @@ export class ProductsDataAccess {
 
       result.data = db.products
         .filter(query)
-        .slice(skip)
+        .slice(offset)
         .slice(0, limit)
         .map(product => {
           /* Bind each product's category. */

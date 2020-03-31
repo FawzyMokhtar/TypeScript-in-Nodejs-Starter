@@ -149,11 +149,12 @@ Each Product will have the properties
 
 ### Database
 
-Until now this boilerplate supports three types of databases:
+Until now this boilerplate supports four types of databases:
 
-- In-memory Database (branch [master](https://github.com/FawzyMokhtar/TypeScript-in-Nodejs-Starter/tree/master)).
-- PostgreSQL Database (branch [postgresql-integration](https://github.com/FawzyMokhtar/TypeScript-in-Nodejs-Starter/tree/postgresql-integration)).
-- MySQL Database (current branch).
+1. In-memory Database (branch [master](https://github.com/FawzyMokhtar/TypeScript-in-Nodejs-Starter/tree/master)).
+2. PostgreSQL Database (branch [postgresql-integration](https://github.com/FawzyMokhtar/TypeScript-in-Nodejs-Starter/tree/postgresql-integration)).
+3. MySQL Database (current branch).
+4. MSSQL Database (branch [mssql-integration](https://github.com/FawzyMokhtar/TypeScript-in-Nodejs-Starter/tree/mssql-integration)).
 
 We are using a [mysql](https://dev.mysql.com/) database along with [sequelize ORM](https://sequelize.org/).
 

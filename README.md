@@ -9,7 +9,7 @@ This project is well organized, scalable and maintainable boilerplate as your ap
 It's is recommended before start to have a basic knowledge about the following
 
 - [TypeScript](https://www.typescriptlang.org/).
-- [MySQL](https://dev.mysql.com/).
+- [MSSQL](https://www.microsoft.com/en-us/sql-server).
 - [Sequelize ORM](https://sequelize.org/).
 - [Express](https://www.npmjs.com/package/express).
 - [Express Validator](https://www.npmjs.com/package/express-validator).
@@ -23,7 +23,7 @@ It's is recommended before start to have a basic knowledge about the following
   - [Setup project dependencies](#setup-project-dependencies).
   - [Run project](#to-run-this-project-in-development-environment-run-the-command).
 - [Project structure](#project-structure).
-- [Database](#database) (MySQL Integration).
+- [Database](#database) (MSSQL Integration).
 - [API](#api)
   - [App specific error codes](#app-specific-error-codes).
   - [API examples](#api-examples).
@@ -149,13 +149,14 @@ Each Product will have the properties
 
 ### Database
 
-Until now this boilerplate supports three types of databases:
+Until now this boilerplate supports four types of databases:
 
-- In-memory Database (branch [master](https://github.com/FawzyMokhtar/TypeScript-in-Nodejs-Starter/tree/master)).
-- PostgreSQL Database (branch [postgresql-integration](https://github.com/FawzyMokhtar/TypeScript-in-Nodejs-Starter/tree/postgresql-integration)).
-- MySQL Database (current branch).
+1. In-memory Database (branch [master](https://github.com/FawzyMokhtar/TypeScript-in-Nodejs-Starter/tree/master)).
+2. PostgreSQL Database (branch [postgresql-integration](https://github.com/FawzyMokhtar/TypeScript-in-Nodejs-Starter/tree/postgresql-integration)).
+3. MySQL Database (branch [mysql-integration](https://github.com/FawzyMokhtar/TypeScript-in-Nodejs-Starter/tree/mysql-integration)).
+4. MSSQL Database (current branch).
 
-We are using a [mysql](https://dev.mysql.com/) database along with [sequelize ORM](https://sequelize.org/).
+We are using a [sql server](https://www.microsoft.com/en-us/sql-server) database along with [sequelize ORM](https://sequelize.org/).
 
 The database schema and definition could be found in the location <span style="color: blue">./src/app/shared/db</span> .
 
@@ -171,7 +172,7 @@ import { Category, Product } from '../models';
 
 /* 
    Connect to database.
-   NOTE: i'm connecting here to the database `typescript_in_nodejs_starter_db` on my `localhost` with username `root` and password 'fawzy'.
+   NOTE: i'm connecting here to the database `typescript_in_nodejs_starter_db` on my `localhost` with username `sa` and password 'Fawzy@Mokhtar'.
    You can change this data and use your data instead.
  */
 
@@ -180,9 +181,16 @@ import { Category, Product } from '../models';
  *
  * @summary It's important to not use any other instances of sequelize other than this instance unless you have more than one database.
  */
-const sequelize = new Sequelize('typescript_in_nodejs_starter_db', 'root', 'fawzy', {
+const sequelize = new Sequelize('typescript_in_nodejs_starter_db', 'sa', 'Fawzy@Mokhtar', {
   host: 'localhost',
-  dialect: 'mysql',
+  dialect: 'mssql',
+  dialectOptions: {
+    useUTC: false,
+    dateFirst: 1,
+    options: {
+      trustServerCertificate: true
+    }
+  },
   logging: false /* Stop logging sql queries unless your are tracing some problems. */
 });
 

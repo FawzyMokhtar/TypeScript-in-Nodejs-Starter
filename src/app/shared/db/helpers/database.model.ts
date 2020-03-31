@@ -12,9 +12,16 @@ import { Category, Product } from '../models';
  *
  * @summary It's important to not use any other instances of sequelize other than this instance unless you have more than one database.
  */
-const sequelize = new Sequelize('typescript_in_nodejs_starter_db', 'root', 'fawzy', {
+const sequelize = new Sequelize('typescript_in_nodejs_starter_db', 'sa', 'Fawzy@Mokhtar', {
   host: 'localhost',
-  dialect: 'mysql',
+  dialect: 'mssql',
+  dialectOptions: {
+    useUTC: false,
+    dateFirst: 1,
+    options: {
+      trustServerCertificate: true
+    }
+  },
   logging: false /* Stop logging sql queries unless your are tracing some problems. */
 });
 

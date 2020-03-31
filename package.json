@@ -19,8 +19,8 @@
     "express-validator": "^6.4.0",
     "helmet": "^3.21.3",
     "lodash": "^4.17.15",
-    "mysql2": "^2.1.0",
     "sequelize": "^5.21.5",
+    "tedious": "^8.2.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {

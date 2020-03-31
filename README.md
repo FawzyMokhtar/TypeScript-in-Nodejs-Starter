@@ -23,7 +23,7 @@ It's is recommended before start to have a basic knowledge about the following
   - [Setup project dependencies](#setup-project-dependencies).
   - [Run project](#to-run-this-project-in-development-environment-run-the-command).
 - [Project structure](#project-structure).
-- [Database](#database) (PostgreSQL Integration).
+- [Database](#database) (MySQL Integration).
 - [API](#api)
   - [App specific error codes](#app-specific-error-codes).
   - [API examples](#api-examples).
@@ -149,12 +149,13 @@ Each Product will have the properties
 
 ### Database
 
-Until now this boilerplate supports two types of databases:
+Until now this boilerplate supports three types of databases:
 
 - In-memory Database (branch [master](https://github.com/FawzyMokhtar/TypeScript-in-Nodejs-Starter/tree/master)).
-- PostgreSQL Database (current branch).
+- PostgreSQL Database (branch [postgresql-integration](https://github.com/FawzyMokhtar/TypeScript-in-Nodejs-Starter/tree/postgresql-integration)).
+- MySQL Database (current branch).
 
-We are using a [postgresql](https://www.postgresql.org/) database along with [sequelize ORM](https://sequelize.org/).
+We are using a [mysql](https://dev.mysql.com/) database along with [sequelize ORM](https://sequelize.org/).
 
 The database schema and definition could be found in the location <span style="color: blue">./src/app/shared/db</span> .
 
@@ -170,7 +171,7 @@ import { Category, Product } from '../models';
 
 /* 
    Connect to database.
-   NOTE: i'm connecting here to the database `typescript_in_nodejs_starter_db` on my `localhost` with username `postgres` and password 'fawzy'.
+   NOTE: i'm connecting here to the database `typescript_in_nodejs_starter_db` on my `localhost` with username `root` and password 'fawzy'.
    You can change this data and use your data instead.
  */
 
@@ -179,9 +180,9 @@ import { Category, Product } from '../models';
  *
  * @summary It's important to not use any other instances of sequelize other than this instance unless you have more than one database.
  */
-const sequelize = new Sequelize('typescript_in_nodejs_starter_db', 'postgres', 'fawzy', {
+const sequelize = new Sequelize('typescript_in_nodejs_starter_db', 'root', 'fawzy', {
   host: 'localhost',
-  dialect: 'postgres',
+  dialect: 'mysql',
   logging: false /* Stop logging sql queries unless your are tracing some problems. */
 });
 

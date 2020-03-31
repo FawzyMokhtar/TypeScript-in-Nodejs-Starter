@@ -5,7 +5,7 @@ VALUES('Mobiles'),
     ('TVs');
 
 INSERT INTO products
-    (name, price, "categoryId")
+    (name, price, categoryId)
 VALUES
     ('Samsung Galaxy S5', 4500, 1),
     ('Samsung Galaxy S6', 5000, 1),

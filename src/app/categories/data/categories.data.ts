@@ -57,7 +57,7 @@ export class CategoriesDataAccess {
       const categories = await Database.Categories.findAndCountAll({
         where: {
           name: {
-            [Op.iLike]: `%${name}%`
+            [Op.like]: `%${name}%`
           }
         },
         offset,

@@ -82,7 +82,7 @@ export class ProductsDataAccess {
       const products = await Database.Products.findAndCountAll({
         where: {
           name: {
-            [Op.iLike]: `%${name}%`
+            [Op.like]: `%${name}%`
           },
           categoryId: {
             [Op.in]: categories

@@ -9,7 +9,7 @@ This project is well organized, scalable and maintainable boilerplate as your ap
 It's is recommended before start to have a basic knowledge about the following
 
 - [TypeScript](https://www.typescriptlang.org/).
-- [PostgreSQL](https://www.postgresql.org/).
+- [MySQL](https://dev.mysql.com/).
 - [Sequelize ORM](https://sequelize.org/).
 - [Express](https://www.npmjs.com/package/express).
 - [Express Validator](https://www.npmjs.com/package/express-validator).

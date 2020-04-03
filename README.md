@@ -9,8 +9,8 @@ This project is well organized, scalable and maintainable boilerplate as your ap
 It's is recommended before start to have a basic knowledge about the following
 
 - [TypeScript](https://www.typescriptlang.org/).
-- [MSSQL](https://www.microsoft.com/en-us/sql-server).
-- [Sequelize ORM](https://sequelize.org/).
+- [MongoDB](https://docs.mongodb.com/).
+- [Mongoose ODM](https://mongoosejs.com/).
 - [Express](https://www.npmjs.com/package/express).
 - [Express Validator](https://www.npmjs.com/package/express-validator).
 - [Json API](https://jsonapi.org/) with [examples](https://jsonapi.org/examples/) (optional).
@@ -23,7 +23,7 @@ It's is recommended before start to have a basic knowledge about the following
   - [Setup project dependencies](#setup-project-dependencies).
   - [Run project](#to-run-this-project-in-development-environment-run-the-command).
 - [Project structure](#project-structure).
-- [Database](#database) (MSSQL Integration).
+- [Database](#database) (MongoDB Integration).
 - [API](#api)
   - [App specific error codes](#app-specific-error-codes).
   - [API examples](#api-examples).
@@ -149,49 +149,40 @@ Each Product will have the properties
 
 ### Database
 
-Until now this boilerplate supports four types of databases:
+Until now this boilerplate supports five types of databases:
 
 1. In-memory Database (branch [master](https://github.com/FawzyMokhtar/TypeScript-in-Nodejs-Starter/tree/master)).
 2. PostgreSQL Database (branch [postgresql-integration](https://github.com/FawzyMokhtar/TypeScript-in-Nodejs-Starter/tree/postgresql-integration)).
 3. MySQL Database (branch [mysql-integration](https://github.com/FawzyMokhtar/TypeScript-in-Nodejs-Starter/tree/mysql-integration)).
-4. MSSQL Database (current branch).
+4. MSSQL Database (branch [mssql-integration](https://github.com/FawzyMokhtar/TypeScript-in-Nodejs-Starter/tree/mssql-integration)).
+5. MongoDB Database (current branch).
 
-We are using a [sql server](https://www.microsoft.com/en-us/sql-server) database along with [sequelize ORM](https://sequelize.org/).
+We are using a [MongoDB](https://docs.mongodb.com/) database along with [Mongoose ODM](https://mongoosejs.com/).
 
 The database schema and definition could be found in the location <span style="color: blue">./src/app/shared/db</span> .
 
-Each database table must be defined as a [sequelize](https://sequelize.org/) model under the folder <span style="color: blue">./src/app/shared/db/models</span> .
-
-In the file <span style="color: blue">./src/app/shared/db/models/index.ts</span> after exporting all defined models we should setup all models relations.
+Each database collection must be defined as a [mongoose](https://mongoosejs.com/) [model](https://mongoosejs.com/docs/models.html) under the folder <span style="color: blue">./src/app/shared/db/models</span> .
 
 We use a class called <b>Database</b> defined in the file <span style="color: blue">./src/app/shared/db/helpers/database.model.ts</span> as central point to deal with all database models.
 
 ```typescript
-import { Sequelize } from 'sequelize';
+import mongoose, { Connection } from 'mongoose';
 import { Category, Product } from '../models';
 
 /* 
    Connect to database.
-   NOTE: i'm connecting here to the database `typescript_in_nodejs_starter_db` on my `localhost` with username `sa` and password 'Fawzy@Mokhtar'.
+   NOTE: i'm connecting here to the database `typescript_in_nodejs_starter_db` on my `localhost` with no username or password.
    You can change this data and use your data instead.
  */
 
 /**
- * A singleton instance of sequelize that will be used across the application.
+ * A singleton instance of mongoose connection that will be used across the application.
  *
- * @summary It's important to not use any other instances of sequelize other than this instance unless you have more than one database.
+ * @summary It's important to not use any other instances of mongoose other than this instance unless you have more than one database.
  */
-const sequelize = new Sequelize('typescript_in_nodejs_starter_db', 'sa', 'Fawzy@Mokhtar', {
-  host: 'localhost',
-  dialect: 'mssql',
-  dialectOptions: {
-    useUTC: false,
-    dateFirst: 1,
-    options: {
-      trustServerCertificate: true
-    }
-  },
-  logging: false /* Stop logging sql queries unless your are tracing some problems. */
+const dbConnection = mongoose.createConnection('mongodb://localhost:27017/typescript_in_nodejs_starter_db', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 });
 
 /**
@@ -202,38 +193,23 @@ const sequelize = new Sequelize('typescript_in_nodejs_starter_db', 'sa', 'Fawzy@
  */
 export class Database {
   /**
-   * A singleton instance of sequelize that will be used across the application.
+   * A singleton instance of mongoose connection that will be used across the application.
    *
-   * @summary It's important to not use any other instances of sequelize other than this instance unless you have more than one database.
+   * @summary It's important to not use any other instances of mongoose other than this instance unless you have more than one database.
    */
-  public static readonly sequelize: Sequelize = sequelize;
+  public static readonly mongoose: Connection = dbConnection;
 
   /**
-   * Tests the connection to the database using the provided credentials.
-   */
-  public static testDatabaseConnection(): Promise<void> {
-    return sequelize.authenticate();
-  }
-
-  /**
-   * Sync all defined models to the DB.
-   * @param force If force is true, each DAO will do DROP TABLE IF EXISTS ..., before it tries to create its own table
-   */
-  public static syncDatabase(force?: boolean): Promise<never> {
-    return sequelize.sync({ force: force });
-  }
-
-  /**
-   * The Category model that maps the `categories table` in the database.
-   * The model name will be `categories` also.
+   * The Category model that maps the `categories collection` in the database.
+   * The model name will be `Category` also.
    */
   public static get Categories(): typeof Category {
     return Category;
   }
 
   /**
-   * The Product model that maps the `products table` in the database.
-   * The model name will be `products` also.
+   * The Product model that maps the `products collection` in the database.
+   * The model name will be `Product` also.
    */
   public static get Products(): typeof Product {
     return Product;
@@ -241,10 +217,9 @@ export class Database {
 }
 ```
 
-You can find the database scripts under the <span style="color: blue">./resources</span> folder
+You can find the database seeding data under the <span style="color: blue">./resources</span> folder
 
-- typescript_in_nodejs_starter_db.sql (a full database schema & data script).
-- typescript_in_nodejs_starter_db_data.sql (a data only script).
+- typescript_in_nodejs_starter_db_data.js (a mongo-shell script).
 
 ### API
 
@@ -405,7 +380,7 @@ export enum AppErrorCode {
 
   Searching for a list of products those matching some criteria
 
-  `[GET]` `http://localhost:3000/api/products?name=Samsung&categories=1,2,3&page=1&pageSize=3`
+  `[GET]` `http://localhost:3000/api/products?name=Samsung&categories=5e83c044adcbbabe44e1aed9,5e83c081adcbbabe44e1aeda,5e83c081adcbbabe44e1aedb&page=1&pageSize=3`
 
   Should return a response like the following
 
@@ -413,32 +388,29 @@ export enum AppErrorCode {
   {
     "data": [
       {
-        "id": 1,
+        "id": "A mongodb object-id",
         "name": "Samsung Galaxy S5",
         "price": 5000,
-        "categoryId": 1,
         "category": {
-          "id": 1,
+          "id": "A mongodb object-id",
           "name": "Mobiles"
         }
       },
       {
-        "id": 2,
+        "id": "A mongodb object-id",
         "name": "Samsung Galaxy S6",
         "price": 4500,
-        "categoryId": 1,
         "category": {
-          "id": 1,
+          "id": "A mongodb object-id",
           "name": "Mobiles"
         }
       },
       {
-        "id": 15,
+        "id": "A mongodb object-id",
         "name": "Samsung 32 Inch HD LED Standard TV - UA32K4000",
         "price": 3550,
-        "categoryId": 3,
         "category": {
-          "id": 3,
+          "id": "A mongodb object-id",
           "name": "TVs"
         }
       }
@@ -463,7 +435,7 @@ export enum AppErrorCode {
   {
     "name": "Samsung Galaxy S5",
     "price": 12300.0,
-    "categoryId": 1
+    "categoryId": "5e83c044adcbbabe44e1aed9"
   }
   ```
 

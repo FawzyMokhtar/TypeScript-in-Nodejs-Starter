@@ -1,28 +1,20 @@
-import { Sequelize } from 'sequelize';
+import mongoose, { Connection } from 'mongoose';
 import { Category, Product } from '../models';
 
 /* 
    Connect to database.
-   NOTE: i'm connecting here to the database `typescript_in_nodejs_starter_db` on my `localhost` with username `postgres` and password 'fawzy'.
+   NOTE: i'm connecting here to the database `typescript_in_nodejs_starter_db` on my `localhost` with no username or password.
    You can change this data and use your data instead.
  */
 
 /**
- * A singleton instance of sequelize that will be used across the application.
+ * A singleton instance of mongoose connection that will be used across the application.
  *
- * @summary It's important to not use any other instances of sequelize other than this instance unless you have more than one database.
+ * @summary It's important to not use any other instances of mongoose other than this instance unless you have more than one database.
  */
-const sequelize = new Sequelize('typescript_in_nodejs_starter_db', 'sa', 'Fawzy@Mokhtar', {
-  host: 'localhost',
-  dialect: 'mssql',
-  dialectOptions: {
-    useUTC: false,
-    dateFirst: 1,
-    options: {
-      trustServerCertificate: true
-    }
-  },
-  logging: false /* Stop logging sql queries unless your are tracing some problems. */
+const dbConnection = mongoose.createConnection('mongodb://localhost:27017/typescript_in_nodejs_starter_db', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 });
 
 /**
@@ -33,38 +25,23 @@ const sequelize = new Sequelize('typescript_in_nodejs_starter_db', 'sa', 'Fawzy@
  */
 export class Database {
   /**
-   * A singleton instance of sequelize that will be used across the application.
+   * A singleton instance of mongoose connection that will be used across the application.
    *
-   * @summary It's important to not use any other instances of sequelize other than this instance unless you have more than one database.
+   * @summary It's important to not use any other instances of mongoose other than this instance unless you have more than one database.
    */
-  public static readonly sequelize: Sequelize = sequelize;
+  public static readonly mongoose: Connection = dbConnection;
 
   /**
-   * Tests the connection to the database using the provided credentials.
-   */
-  public static testDatabaseConnection(): Promise<void> {
-    return sequelize.authenticate();
-  }
-
-  /**
-   * Sync all defined models to the DB.
-   * @param force If force is true, each DAO will do DROP TABLE IF EXISTS ..., before it tries to create its own table
-   */
-  public static syncDatabase(force?: boolean): Promise<never> {
-    return sequelize.sync({ force: force });
-  }
-
-  /**
-   * The Category model that maps the `categories table` in the database.
-   * The model name will be `categories` also.
+   * The Category model that maps the `categories collection` in the database.
+   * The model name will be `Category` also.
    */
   public static get Categories(): typeof Category {
     return Category;
   }
 
   /**
-   * The Product model that maps the `products table` in the database.
-   * The model name will be `products` also.
+   * The Product model that maps the `products collection` in the database.
+   * The model name will be `Product` also.
    */
   public static get Products(): typeof Product {
     return Product;

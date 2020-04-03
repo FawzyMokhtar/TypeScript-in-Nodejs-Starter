@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
-import { Ok, NotFound, validationErrorFormatter, BadRequest, getQueryParamAsIntArray } from '../shared';
+import { Ok, NotFound, validationErrorFormatter, BadRequest, getQueryParamAsStringArray } from '../shared';
 import {
   ProductsDataAccess,
   createProductValidator,
@@ -53,7 +53,7 @@ productsRouter.get('', async (req: Request, res: Response, next: NextFunction) =
   try {
     const result = await ProductsDataAccess.search(
       req.query.name,
-      getQueryParamAsIntArray(req, 'categories'),
+      getQueryParamAsStringArray(req, 'categories'),
       parseInt(req.query.page),
       parseInt(req.query.pageSize)
     );
@@ -71,7 +71,7 @@ productsRouter.get('', async (req: Request, res: Response, next: NextFunction) =
 /* Find product by id route. */
 productsRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await ProductsDataAccess.findById(Number.parseInt(req.params.id));
+    const result = await ProductsDataAccess.findById(req.params.id);
 
     if (result.error) {
       next(result.error);
@@ -117,7 +117,7 @@ productsRouter.put('', updateProductValidator, async (req: Request, res: Respons
 /* Delete by id route. */
 productsRouter.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await ProductsDataAccess.delete(Number.parseInt(req.params.id));
+    const result = await ProductsDataAccess.delete(req.params.id);
 
     if (result.error) {
       next(result.error);

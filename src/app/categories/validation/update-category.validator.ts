@@ -14,11 +14,11 @@ export const updateCategoryValidator = [
       detail: 'Id is required'
     })
 
-    .isInt({ gt: 0 })
+    .isString()
     .withMessage({
       code: AppErrorCode.InvalidType,
       title: 'Invalid field type',
-      detail: 'Id must be an (Integer)'
+      detail: 'Id must be series of characters (String)'
     }),
 
   /* name field. */

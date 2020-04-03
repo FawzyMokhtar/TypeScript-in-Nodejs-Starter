@@ -54,10 +54,10 @@ export const createProductValidator = [
       detail: 'Category id is required'
     })
 
-    .isInt({ gt: 0 })
+    .isString()
     .withMessage({
       code: AppErrorCode.InvalidType,
       title: 'Invalid field type',
-      detail: 'Category id must be an (Integer)'
+      detail: 'Category id must be series of characters (String)'
     })
 ];

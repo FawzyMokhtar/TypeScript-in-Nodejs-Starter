@@ -15,5 +15,5 @@ export interface CreateProductInput {
   /**
    * Gets or sets the id of the category that the product belongs to.
    */
-  categoryId: number;
+  categoryId: string;
 }

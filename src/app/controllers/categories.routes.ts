@@ -70,7 +70,7 @@ categoriesRouter.get('', async (req: Request, res: Response, next: NextFunction)
 /* Find category by id route. */
 categoriesRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await CategoriesDataAccess.findById(Number.parseInt(req.params.id));
+    const result = await CategoriesDataAccess.findById(req.params.id);
 
     if (result.error) {
       next(result.error);
@@ -116,7 +116,7 @@ categoriesRouter.put('', updateCategoryValidator, async (req: Request, res: Resp
 /* Delete by id route. */
 categoriesRouter.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await CategoriesDataAccess.delete(Number.parseInt(req.params.id));
+    const result = await CategoriesDataAccess.delete(req.params.id);
 
     if (result.error) {
       next(result.error);

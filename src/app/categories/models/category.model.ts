@@ -7,7 +7,7 @@ export interface CategoryDTO {
   /**
    * Gets or sets the id of the category.
    */
-  id: number;
+  id: string;
 
   /**
    * Gets or sets the name of category.

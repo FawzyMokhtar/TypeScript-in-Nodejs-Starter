@@ -5,7 +5,7 @@ export interface UpdateProductInput {
   /**
    * Gets or sets the id of the product.
    */
-  id: number;
+  id: string;
 
   /**
    * Gets or sets the name of product.
@@ -20,5 +20,5 @@ export interface UpdateProductInput {
   /**
    * Gets or sets the id of the category that the product belongs to.
    */
-  categoryId: number;
+  categoryId: string;
 }

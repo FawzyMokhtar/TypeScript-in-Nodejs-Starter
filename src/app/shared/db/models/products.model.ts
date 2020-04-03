@@ -1,79 +1,82 @@
-import { Model, DataTypes, Association } from 'sequelize';
+import mongoose, { Schema, Document } from 'mongoose';
 import { Database } from '../helpers';
 import { Category } from './categories.model';
 
 /**
- * The Products model that maps the `products table` in the database.
- * The model name will be `products` also.
+ * The schema definition for the product model.
  */
-export class Product extends Model {
-  /* 
-     Any property or method will be declared in this class should has
-     the `non-null assertion` `!` is required in strict mode.
-  */
+const schema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      minlength: 2,
+      maxlength: 50
+    },
+    price: {
+      type: Number,
+      required: true,
+      min: 0
+    },
+    category: {
+      type: Schema.Types.ObjectId,
+      ref: Category,
+      required: true
+    }
+  },
+  {
+    toObject: {
+      virtuals: true
+    } /* Allow model instances to have the user defined virtual properties when using the .toObject() method. */,
+    toJSON: {
+      virtuals: true
+    } /* Allow model instances to have the user defined virtual properties when using the .toObject() method. */,
+    versionKey: false /* Skip versioning newly created or updated documents. */,
+    skipVersioning: true
+  }
+);
+
+/**
+ * The product data model representation.
+ */
+export interface Product extends Document {
+  /**
+   * Gets or sets the object id of the product.
+   * @summary this property will has value only if the option `_id` is set to `true` on the model schema definition.
+   */
+  _id: mongoose.Types.ObjectId;
 
   /**
-   * Gets or the sets the id of the product.
+   * Gets the string value for the object id of the product.
+   * @summary this property will has value only if the option `id` is set to `true` on the model schema definition.
    */
-  public id!: number;
+  readonly id: string;
 
   /**
-   * Gets or sets the name of the product.
+   * Gets or sets the name of product.
    */
-  public name!: string;
+  name: string;
 
   /**
    * Gets or sets the price of the product.
    */
-  public price!: number;
+  price: number;
 
   /**
-   * Gets or sets the id of the category that the product belongs to.
+   * Gets or sets the id of the category or the category itself that the product belongs to.
+   *
+   * @summary if the category path was populated the value of this property will be the populated category not the id of it.
    */
-  public categoryId!: number;
-
-  /* 
-     Since TypeScript cannot determine model association at compile time
-     we have to declare them here purely virtually
-     these will not exist until `Model.init` was called.
-  */
-
-  /**
-   * Gets the category which the current product belongs to.
-   * @summary An pre-declared possible inclusion that will only be populated if you actively include a relation.
-   */
-  public readonly category?: Category;
-
-  /**
-   * An object hash from alias to association object
-   */
-  public static readonly associations: {
-    category: Association<Product, Category>;
-  };
+  category: mongoose.Types.ObjectId | Category;
 }
 
+/* Add the implementation of the id property. */
+schema.virtual('id').get(function(this: Product) {
+  return this._id ? this._id.toString() : undefined;
+});
+
 /**
- * Define the model structure here.
+ * The Product model that maps the `products collection` in the database.
+ * The model name will be `Product` also.
  */
-Product.init(
-  {
-    id: {
-      type: DataTypes.BIGINT,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    name: {
-      type: DataTypes.STRING(50),
-      allowNull: false
-    },
-    price: {
-      type: DataTypes.DECIMAL(19, 2),
-      allowNull: false
-    }
-  },
-  {
-    sequelize: Database.sequelize,
-    modelName: 'products' /* The model name & also the mapped database table name.  */,
-    timestamps: false
-  }
-);
+export const Product = Database.mongoose.model<Product>('Product', schema);

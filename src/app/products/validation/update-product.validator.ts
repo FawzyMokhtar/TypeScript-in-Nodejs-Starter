@@ -14,11 +14,11 @@ export const updateProductValidator = [
       detail: 'Id is required'
     })
 
-    .isInt({ gt: 0 })
+    .isString()
     .withMessage({
       code: AppErrorCode.InvalidType,
       title: 'Invalid field type',
-      detail: 'Id must be an (Integer)'
+      detail: 'Id must be series of characters (String)'
     }),
 
   /* name field. */
@@ -70,10 +70,10 @@ export const updateProductValidator = [
       detail: 'Category id is required'
     })
 
-    .isInt({ gt: 0 })
+    .isString()
     .withMessage({
       code: AppErrorCode.InvalidType,
       title: 'Invalid field type',
-      detail: 'Category id must be an (Integer)'
+      detail: 'Category id must be series of characters (String)'
     })
 ];

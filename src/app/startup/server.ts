@@ -2,7 +2,7 @@ import express, { Application } from 'express';
 import helmet from 'helmet';
 import compression from 'compression';
 import cors from 'cors';
-import { errorHandler, Logger, Database } from '../shared';
+import { errorHandler, Logger } from '../shared';
 
 /** All of application routes as pairs of (Router &  Relative Route) */
 import { categoriesRouter, categoriesRelativeRoute, productsRouter, productsRelativeRoute } from '../controllers';
@@ -88,9 +88,5 @@ export function setupServer(app: Application): void {
  */
 export function startServer(app: Application): void {
   const port = process.env.PORT || 3000;
-
-  /* Ensure that we don't start the server unless database is connected. */
-  Database.syncDatabase().then(() =>
-    app.listen(port, () => Logger.info(`Express server is running on port ${port}`, null, true))
-  );
+  app.listen(port, () => Logger.info(`Express server is running on port ${port}`, null, true));
 }

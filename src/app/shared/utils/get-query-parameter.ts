@@ -18,3 +18,21 @@ export function getQueryParamAsIntArray(req: Request, param: string, separator =
 
   return (req.query[param] as string).split(separator).map(item => parseInt(item));
 }
+
+/**
+ * Returns an array of Strings by parsing the given query param as a comma separated string,
+ * or an empty array if the query parameter was not found of empty.
+ *
+ * e.g. if the query param value was `?ids=foo,bar,baz` the result will be `['foo', 'bar', 'baz']`.
+ *
+ * @param req The express request.
+ * @param param The name of the query param.
+ * @param separator An optional separator, The default is `,`.
+ */
+export function getQueryParamAsStringArray(req: Request, param: string, separator = ','): string[] {
+  if (!req.query[param]) {
+    return [];
+  }
+
+  return (req.query[param] as string).split(separator);
+}

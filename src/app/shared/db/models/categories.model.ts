@@ -1,65 +1,59 @@
-import { Model, DataTypes, Association } from 'sequelize';
+import mongoose, { Schema, Document } from 'mongoose';
 import { Database } from '../helpers';
-import { Product } from './products.model';
 
 /**
- * The Category model that maps the `categories table` in the database.
- * The model name will be `categories` also.
+ * The schema definition for the category model.
  */
-export class Category extends Model {
-  /* 
-     Any property or method will be declared in this class should has
-     the `non-null assertion` `!` is required in strict mode.
-  */
-
-  /**
-   * Gets or the sets the id of the category.
-   */
-  public id!: number;
-
-  /**
-   * Gets or sets the name of the category.
-   */
-  public name!: string;
-
-  /* 
-     Since TypeScript cannot determine model association at compile time
-     we have to declare them here purely virtually
-     these will not exist until `Model.init` was called.
-  */
-
-  /**
-   * Gets a set of products belong to the current category.
-   * @summary An pre-declared possible inclusion that will only be populated if you actively include a relation.
-   */
-  public readonly products?: Product[];
-
-  /**
-   * An object hash from alias to association object
-   */
-  public static readonly associations: {
-    products: Association<Category, Product>;
-  };
-}
-
-/**
- * Define the model structure here.
- */
-Category.init(
+const schema = new Schema(
   {
-    id: {
-      type: DataTypes.BIGINT,
-      primaryKey: true,
-      autoIncrement: true
-    },
     name: {
-      type: DataTypes.STRING(50),
-      allowNull: false
+      type: String,
+      required: true,
+      minlength: 2,
+      maxlength: 50
     }
   },
   {
-    sequelize: Database.sequelize,
-    modelName: 'categories' /* The model name & also the mapped database table name.  */,
-    timestamps: false
+    toObject: {
+      virtuals: true
+    } /* Allow model instances to have the user defined virtual properties when using the .toObject() method. */,
+    toJSON: {
+      virtuals: true
+    } /* Allow model instances to have the user defined virtual properties when using the .toObject() method. */,
+    versionKey: false /* Skip versioning newly created or updated documents. */,
+    skipVersioning: true
   }
 );
+
+/**
+ * The category data model representation.
+ */
+export interface Category extends Document {
+  /**
+   * Gets or sets the object id of the category.
+   * @summary this property will has value only if the option `_id` is set to `true` on the model schema definition.
+   */
+  _id: mongoose.Types.ObjectId;
+
+  /**
+   * Gets the string value for the object id of the category.
+   * @summary this property will has value only if the option `id` is set to `true` on the model schema definition.
+   */
+  readonly id: string;
+
+  /**
+   * Gets or sets the name of category.
+   */
+  name: string;
+}
+
+/* Add the implementation of the id property. */
+schema.virtual('id').get(function(this: Category) {
+  return this._id ? this._id.toString() : undefined;
+});
+
+/**
+ * The Category model that maps the `categories collection` in the database.
+ * The model name will be `Category` also.
+ */
+export const Category = Database.mongoose.model<Category>('Category', schema);

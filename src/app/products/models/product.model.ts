@@ -5,7 +5,7 @@ import { CategoryDTO } from '../../categories/models';
  *
  * @see for more information about DTO https://www.codeproject.com/Articles/1050468/Data-Transfer-Object-Design-Pattern-in-Csharp
  */
-export interface Product {
+export interface ProductDTO {
   /**
    * Gets or sets the id of the product.
    */

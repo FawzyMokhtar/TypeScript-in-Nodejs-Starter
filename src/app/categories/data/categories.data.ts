@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { Op } from 'sequelize';
 import { Database, DataResult, paginate, genPaginationInfo, AppErrorCode } from '../../shared';
 import { CategoryDTO, CreateCategoryInput, UpdateCategoryInput } from '../models';

@@ -1,7 +1,6 @@
-import _ from 'lodash';
 import { Op } from 'sequelize';
 import { Database, DataResult, paginate, genPaginationInfo, AppErrorCode } from '../../shared';
-import { Product, CreateProductInput, UpdateProductInput } from '../models';
+import { ProductDTO, CreateProductInput, UpdateProductInput } from '../models';
 
 /**
  * The Products-Module data-access service that includes the functionalities to create, read, update and delete categories.
@@ -11,8 +10,8 @@ export class ProductsDataAccess {
    * Creates a new product based on the provided data-model.
    * @param data The data-model to create the new product.
    */
-  public static async create(data: CreateProductInput): Promise<DataResult<Product>> {
-    const result: DataResult<Product> = {};
+  public static async create(data: CreateProductInput): Promise<DataResult<ProductDTO>> {
+    const result: DataResult<ProductDTO> = {};
 
     try {
       //#region validate data-model
@@ -72,8 +71,8 @@ export class ProductsDataAccess {
     categories: number[],
     page: number,
     pageSize: number
-  ): Promise<DataResult<Product[]>> {
-    const result: DataResult<Product[]> = {};
+  ): Promise<DataResult<ProductDTO[]>> {
+    const result: DataResult<ProductDTO[]> = {};
 
     try {
       page = page || 1;
@@ -95,7 +94,7 @@ export class ProductsDataAccess {
         nest: true
       });
 
-      result.data = products.rows as Product[];
+      result.data = products.rows as ProductDTO[];
 
       result.paginationInfo = genPaginationInfo(page, pageSize, products.count, products.rows.length);
     } catch (error) {
@@ -109,15 +108,15 @@ export class ProductsDataAccess {
    * Finds the product with the given id.
    * @param id The id of the product.
    */
-  public static async findById(id: number): Promise<DataResult<Product>> {
-    const result: DataResult<Product> = {};
+  public static async findById(id: number): Promise<DataResult<ProductDTO>> {
+    const result: DataResult<ProductDTO> = {};
 
     try {
       result.data = (await Database.Products.findByPk(id, {
         include: [{ model: Database.Categories, required: true }],
         raw: true,
         nest: true
-      })) as Product;
+      })) as ProductDTO;
       result.isNotFound = !result.data;
     } catch (error) {
       result.error = error;
@@ -130,8 +129,8 @@ export class ProductsDataAccess {
    * Updates an existing product based on the provided data-model.
    * @param data The data-model to update the existing product.
    */
-  public static async update(data: UpdateProductInput): Promise<DataResult<Product>> {
-    const result: DataResult<Product> = {};
+  public static async update(data: UpdateProductInput): Promise<DataResult<ProductDTO>> {
+    const result: DataResult<ProductDTO> = {};
 
     try {
       /** The product to be updated. */
@@ -197,8 +196,8 @@ export class ProductsDataAccess {
    * Deletes an existing product.
    * @param id The id of the existing product.
    */
-  public static async delete(id: number): Promise<DataResult<Product>> {
-    const result: DataResult<Product> = {};
+  public static async delete(id: number): Promise<DataResult<ProductDTO>> {
+    const result: DataResult<ProductDTO> = {};
 
     try {
       /** The product to be deleted. */
@@ -215,7 +214,7 @@ export class ProductsDataAccess {
       /* Delete product from database. */
       await product.destroy();
 
-      result.data = product.get({ plain: true }) as Product;
+      result.data = product.get({ plain: true }) as ProductDTO;
     } catch (error) {
       result.error = error;
     }

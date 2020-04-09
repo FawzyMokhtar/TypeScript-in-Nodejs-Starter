@@ -3,7 +3,7 @@ import { Category, Product } from '../models';
 
 /* 
    Connect to database.
-   NOTE: i'm connecting here to the database `typescript_in_nodejs_starter_db` on my `localhost` with username `postgres` and password 'fawzy'.
+   NOTE: i'm connecting here to the database `typescript_in_nodejs_starter_db` on my `localhost` with username `root` and password 'fawzy'.
    You can change this data and use your data instead.
  */
 

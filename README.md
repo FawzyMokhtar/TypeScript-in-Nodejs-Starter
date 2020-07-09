@@ -434,3 +434,4 @@ We are using the following plugins to statically analysis our code
 - [Prettier](https://prettier.io/).
 - [Husky](https://www.npmjs.com/package/husky).
 - [Lint-Staged](https://www.npmjs.com/package/lint-staged).
+-----
